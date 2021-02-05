@@ -2,38 +2,65 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class CustomerController extends Controller
 {
     //
     public function index(){
-
-        //tao mang khach hang
-        $customers = [
-            '0' => [
-                'id'  => 1,
-                'name'=> 'customer1',
-                'bod' => '1998-09-01',
-                'email' => 'customer1@gmail.com'
-            ],
-
-            '1' => [
-                'id'  => 2,
-                'name'=> 'customer2',
-                'bod' => '1998-09-01',
-                'email' => 'customer2@gmail.com'
-            ],
-
-            '2' => [
-                'id'  => 3,
-                'name'=> 'customer3',
-                'bod' => '1998-09-01',
-                'email' => 'customer3@gmail.com'
-            ]
-        ];
-
-        //goi view va truyen du lieu sang view
+        $customers = Customer::all();
         return view('customers.list', compact('customers'));
+    }
+
+    public function create(){
+        return view('customers.create');
+    }
+
+    public function store(Request $request): RedirectResponse
+    {
+        $customer = new Customer();
+        $customer->name     = $request->input('name');
+        $customer->email    = $request->input('email');
+        $customer->dob      = $request->input('dob');
+        $customer->save();
+
+        //dung session de dua ra thong bao
+        Session::flash('success', 'Tạo mới khách hàng thành công');
+        //tao moi xong quay ve trang danh sach khach hang
+        return redirect()->route('customers.index');
+    }
+
+    public function edit(int $id){
+        $customer = Customer::findOrFail($id);
+        return view('customers.edit', compact('customer'));
+    }
+
+    public function update(Request $request, int $id): RedirectResponse
+    {
+        $customer = Customer::findOrFail($id);
+        $customer->name     = $request->input('name');
+        $customer->email    = $request->input('email');
+        $customer->dob      = $request->input('dob');
+        $customer->save();
+
+        //dung session de dua ra thong bao
+        Session::flash('success', 'Cập nhật khách hàng thành công');
+        //cap nhat xong quay ve trang danh sach khach hang
+        return redirect()->route('customers.index');
+    }
+
+    public function destroy(int $id): RedirectResponse
+    {
+        $customer = Customer::findOrFail($id);
+        $customer->delete();
+
+        //dung session de dua ra thong bao
+        Session::flash('success', 'Xóa khách hàng thành công');
+
+        //xoa xong quay ve trang danh sach khach hang
+        return redirect()->route('customers.index');
     }
 }
