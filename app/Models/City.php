@@ -11,11 +11,6 @@ class City extends Model
     use HasFactory;
     protected $table = 'cities';
 
-    protected $fillable = [
-        'id',
-        'name'
-    ];
-
     public function customer(): HasMany
     {
         return $this->hasMany(Customer::class);

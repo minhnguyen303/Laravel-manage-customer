@@ -7,29 +7,49 @@
             <div class="col-12">
                 <h1>Danh Sách Khách Hàng</h1>
             </div>
-            <a class="btn btn-outline-primary" href="" data-toggle="modal" data-target="#cityModal">
-                Lọc
-            </a>
             <div class="col-12">
-                @if (Session::has('success'))
-                    <p class="text-success">
-                        <i class="fa fa-check" aria-hidden="true"></i>
-                        {{ Session::get('success') }}
-                    </p>
-                @endif
+                <div class="row">
+                    <div class="col-6">
+                        <a class="btn btn-outline-primary" href="" data-toggle="modal" data-target="#cityModal">
+                            Lọc
+                        </a>
+                        <br>
+                        @if (Session::has('success'))
+                            <p class="text-success">
+                                <i class="fa fa-check" aria-hidden="true"></i>
+                                {{ Session::get('success') }}
+                            </p>
+                        @endif
 
-                @if(isset($totalCustomerFilter))
-                    <span class="text-muted">
-                    {{'Tìm thấy' . ' ' . $totalCustomerFilter . ' '. 'khách hàng:'}}
-                </span>
-                @endif
+                        @if(isset($totalCustomerFilter))
+                            <span class="text-muted">{{'Tìm thấy' . ' ' . $totalCustomerFilter . ' '. 'khách hàng:'}}</span>
+                        @endif
 
-                @if(isset($cityFilter))
-                    <div class="pl-5">
-                   <span class="text-muted"><i class="fa fa-check" aria-hidden="true"></i>
-                       {{ 'Thuộc tỉnh' . ' ' . $cityFilter->name }}</span>
+                        @if(isset($cityFilter))
+                            <div class="pl-5">
+                                <span class="text-muted">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                    {{ 'Thuộc tỉnh' . ' ' . $cityFilter->name }}
+                                </span>
+                            </div>
+                        @endif
                     </div>
-                @endif
+                    <div class="col-6">
+                        <form class="navbar-form navbar-left" action="{{ route('customers.search') }}" method="get">
+                            @csrf
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="keyword" placeholder="Search" value="{{ (isset($_GET['keyword'])) ? $_GET['keyword'] : '' }}">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <button type="submit" class="btn btn-default">Tìm kiếm</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
             <table class="table table-striped">
                 <thead>
@@ -63,7 +83,19 @@
                 @endif
                 </tbody>
             </table>
-            <a class="btn btn-primary" href="{{ route('customers.create') }}">Thêm mới</a>
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-6">
+                        <a class="btn btn-primary" href="{{ route('customers.create') }}">Thêm mới</a>
+                    </div>
+                    <div class="col-6">
+                        <div class="pagination float-right">
+                            {{--{!! $customers->appends(Request::all())->links() !!}--}}
+                            {{ $customers->appends(request()->query()) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Modal -->
