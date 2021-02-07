@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CustomerRequest;
 use App\Models\City;
 use App\Models\Customer;
 use Illuminate\Http\RedirectResponse;
@@ -22,12 +23,12 @@ class CustomerController extends Controller
         return view('customers.create', compact('cities'));
     }
 
-    public function store(Request $request){
+    public function store(CustomerRequest $request){
         $customer = new Customer();
-        $customer->name     = $request->input('name');
-        $customer->email    = $request->input('email');
-        $customer->dob      = $request->input('dob');
-        $customer->city_id  = $request->input('city_id');
+        $customer->name = $request->input('name');
+        $customer->email = $request->input('email');
+        $customer->dob = $request->input('dob');
+        $customer->city_id = $request->input('city_id');
         $customer->save();
 
         //tao moi xong quay ve trang danh sach khach hang
@@ -41,12 +42,12 @@ class CustomerController extends Controller
         return view('customers.edit', compact('customer', 'cities'));
     }
 
-    public function update(Request $request, $id){
+    public function update(CustomerRequest $request, $id){
         $customer = Customer::findOrFail($id);
-        $customer->name     = $request->input('name');
-        $customer->email    = $request->input('email');
-        $customer->dob      = $request->input('dob');
-        $customer->city_id  = $request->input('city_id');
+        $customer->name = $request->input('name');
+        $customer->email = $request->input('email');
+        $customer->dob = $request->input('dob');
+        $customer->city_id = $request->input('city_id');
         $customer->save();
 
         //dung session de dua ra thong bao
